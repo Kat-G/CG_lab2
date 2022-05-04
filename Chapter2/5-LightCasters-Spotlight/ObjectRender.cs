@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LearnOpenTK.Common;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -50,11 +50,11 @@ namespace CG_lab2
             GL.BindVertexArray(VertexArrayObject);
         }
 
-        public void Render()
-        {
-            GL.DrawElements(PrimitiveType.Triangles, IndicesLenght, DrawElementsType.UnsignedInt, 0);
+        //public void Render()
+        //{
+        //    GL.DrawElements(PrimitiveType.Triangles, IndicesLenght, DrawElementsType.UnsignedInt, 0);
 
-        }
+        //}
 
         public void ShaderAttribute()
         {
@@ -74,16 +74,25 @@ namespace CG_lab2
 
         }
 
-        public void ApplyTexture()
+        //public void ApplyTexture()
+        //{
+        //    Diffuse.Use(TextureUnit.Texture0);
+        //    Specular.Use(TextureUnit.Texture1);
+
+        //}
+
+        //public void UpdateShaderModel(Matrix4 model)
+        //{
+        //    Shader.SetMatrix4("model", model);
+        //}
+        public void Render(Matrix4 model)
         {
+            this.Bind();
             Diffuse.Use(TextureUnit.Texture0);
             Specular.Use(TextureUnit.Texture1);
-
-        }
-
-        public void UpdateShaderModel(Matrix4 model)
-        {
             Shader.SetMatrix4("model", model);
+            this.ShaderAttribute();
+            GL.DrawElements(PrimitiveType.Triangles, IndicesLenght, DrawElementsType.UnsignedInt, 0);
         }
     }
 }
