@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LearnOpenTK.Common;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -17,6 +17,7 @@ namespace LearnOpenTK
     // then we can check if that angle is within the cutoff of the spotlight, if it is we light it accordingly
     public class Window : GameWindow
     {
+        //Куб
         private readonly float[] _vertices =
         {
             // Positions          Normals              Texture coords
@@ -63,8 +64,7 @@ namespace LearnOpenTK
             -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  1.0f,  1.0f, 1.0f
         };
 
-        // We draw multiple different cubes and it helps to store all
-        // their positions in an array for later when we want to draw them
+
         private readonly Vector3 _cubePositions = new Vector3(3.3f, 0.13f, -0.5f);
 
         //Перемещение
@@ -77,22 +77,18 @@ namespace LearnOpenTK
         //Сфера
         float[] HeadVert;
         uint[] HeadInd;
-        //private int VertexArrayObject;// = GL.GenVertexArray();
-        //private int ElementBufferObject;// = GL.GenBuffer();
-        //private int VertexBufferObject;// = GL.GenBuffer();
-        //private int IndicesLenght;
         Texture DiffuseHead, SpecularHead;
         List<ObjectRender> ObjectRenderList = new List<ObjectRender>();
 
-        private readonly Vector3 _lightPos = new Vector3(1.2f, 1.0f, 2.0f);
+        //private readonly Vector3 _lightPos = new Vector3(1.2f, 1.0f, 2.0f);
 
         private int _vertexBufferObject;
 
         private int _vaoModel;
 
-        private int _vaoLamp;
+        //private int _vaoLamp;
 
-        private Shader _lampShader;
+        //private Shader _lampShader;
 
         private Shader _lightingShader;
 
@@ -115,7 +111,7 @@ namespace LearnOpenTK
         {
             base.OnLoad();
 
-            //GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             GL.Enable(EnableCap.DepthTest);
 
@@ -124,8 +120,8 @@ namespace LearnOpenTK
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
             _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
-            _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            
+            //_lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+
             {
                 _vaoModel = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoModel);
@@ -143,14 +139,14 @@ namespace LearnOpenTK
                 GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
             }
 
-            {
-                _vaoLamp = GL.GenVertexArray();
-                GL.BindVertexArray(_vaoLamp);
+            //{
+            //    _vaoLamp = GL.GenVertexArray();
+            //    GL.BindVertexArray(_vaoLamp);
 
-                var positionLocation = _lampShader.GetAttribLocation("aPos");
-                GL.EnableVertexAttribArray(positionLocation);
-                GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
-            }
+            //    var positionLocation = _lampShader.GetAttribLocation("aPos");
+            //    GL.EnableVertexAttribArray(positionLocation);
+            //    GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+            //}
 
             _diffuseMap = Texture.LoadFromFile("Resources/basket.png");
             _specularMap = Texture.LoadFromFile("Resources/red_specular.jpg");
@@ -202,17 +198,16 @@ namespace LearnOpenTK
             _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
 
 
-
             Time += 0.1 * Side;
             if (Side == 1)
                 Time1 += 0.1 * Side;
             if (Math.Abs(Time) > Degrees)
-            { 
-                if (Time<Degrees)
+            {
+                if (Time < Degrees)
                 {
                     Time1 = -1.0f;
                 }
-                Side *= -1; 
+                Side *= -1;
             }
             //Куб 
             var TranslationMatrix = Matrix4.CreateTranslation((float)(Time1 / 80), (float)(Time / 80), 0.0f);
@@ -231,24 +226,17 @@ namespace LearnOpenTK
             model = Matrix4.Identity * RotationMatrixZ * TranslationMatrix * RotationMatrixY;
             foreach (var Obj in ObjectRenderList)
             {
-                Obj.Bind();
-                Obj.ApplyTexture();
-                Obj.UpdateShaderModel(model);
-                Obj.ShaderAttribute();
-                Obj.Render();
+                //Obj.Bind();
+                //Obj.ApplyTexture();
+                //Obj.UpdateShaderModel(model);
+                //Obj.ShaderAttribute();
+                //Obj.Render();
+                Obj.Render(model);
             }
 
 
             GL.BindVertexArray(_vaoModel);
 
-            _lampShader.Use();
-
-
-            //_lampShader.SetMatrix4("model", lampMatrix);
-            _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             SwapBuffers();
         }
